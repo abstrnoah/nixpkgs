@@ -5,8 +5,9 @@ stdenv.mkDerivation rec {
   version = "0.10.4";
 
   src = fetchurl {
-    url = "https://code.meskio.net/tudu/${pname}-${version}.tar.gz";
-    sha256 = "14srqn968ii3sr4v6xc5zzs50dmm9am22lrm57j7n0rhjclwbssy";
+    url =
+      "https://github.com/abstractednoah/tudu/archive/419d8f82fd723d291042776a84f0835a7d9a6285.tar.gz";
+    sha256 = "ad9309b3e6d38ed492d9d5cb70363f4582b68cd68aa03d9fbe46b9a84b848158";
   };
 
   buildInputs = [ ncurses ];
