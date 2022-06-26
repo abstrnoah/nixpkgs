@@ -138,11 +138,13 @@ buildPythonApplication {
     libPath = lib.makeLibraryPath [ pipewire ];
   in
     ''
+    # Re QT_XCB_GL_INTEGRATION: Workaround QT issue on Ubuntu 16.04.
     makeWrapperArgs+=(
       "''${gappsWrapperArgs[@]}"
       "''${qtWrapperArgs[@]}"
       --add-flags '--backend ${backend}'
       --set QUTE_QTWEBENGINE_VERSION_OVERRIDE "${lib.getVersion qtwebengine}"
+      --set QT_XCB_GL_INTEGRATION none
       ${lib.optionalString (pipewireSupport && backend == "webengine") ''--prefix LD_LIBRARY_PATH : ${libPath}''}
       ${lib.optionalString enableWideVine ''--add-flags "--qt-flag widevine-path=${widevine-cdm}/libwidevinecdm.so"''}
     )
