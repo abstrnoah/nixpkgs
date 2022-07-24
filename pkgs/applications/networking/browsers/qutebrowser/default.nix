@@ -7,6 +7,7 @@
 , backend            ? "webengine"
 , pipewireSupport    ? stdenv.isLinux
 , pipewire_0_2
+, alsa-plugins
 }:
 
 assert withMediaPlayback -> gst_all_1 != null;
@@ -115,15 +116,16 @@ in mkDerivationWith python3Packages.buildPythonApplication rec {
 
   preFixup = let
     libPath = lib.makeLibraryPath [ pipewire_0_2 ];
+    alsaPluginDir = lib.concatStringsSep "/" [ (lib.getLib alsa-plugins) "lib" "alsa-lib" ];
   in
     ''
-    # Re QT_XCB_GL_INTEGRATION: Workaround QT issue on Ubuntu 16.04.
     makeWrapperArgs+=(
       "''${gappsWrapperArgs[@]}"
       "''${qtWrapperArgs[@]}"
       --add-flags '--backend ${backend}'
       --set QUTE_QTWEBENGINE_VERSION_OVERRIDE "${lib.getVersion qtwebengine}"
       --set QT_XCB_GL_INTEGRATION none
+      --set ALSA_PLUGIN_DIR "${alsaPluginDir}"
       ${lib.optionalString (pipewireSupport && backend == "webengine") ''--prefix LD_LIBRARY_PATH : ${libPath}''}
     )
   '';
